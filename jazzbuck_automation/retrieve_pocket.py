@@ -37,6 +37,7 @@ class PocketSession:
         r = re.post(method_url, data=json.dumps(payload), headers=headers)
 
         self.data = r.json()["list"]
+        self.since = date
 
     def write_data(
         self,
@@ -47,3 +48,37 @@ class PocketSession:
         """
         with open(filename, "w") as fp:
             json.dump(self.data, fp)
+
+
+def write_pocket_data_to_markdown(
+    pocket_dict: dict[str, dict],
+) -> list[tuple[str, str]]:
+    """
+    Convenience function to write pocket data to markdown for Obsidian.
+    """
+    list_of_markdown = []
+    for key, item in pocket_dict.items():
+        title = item["resolved_title"]
+        time_added = datetime.datetime.utcfromtimestamp(int(item["time_added"]))
+        time_added = format(time_added, "%Y%m%d%H%M")
+        url = item["resolved_url"]
+        excerpt = item["excerpt"]
+        markdown = f"""---
+id: {time_added}
+aliases: ["{time_added}","{title}"]
+---
+#reading-inbox
+
+# {title}
+
+{url}
+
+{excerpt}"""
+
+        title = "".join(x for x in title.title() if not x.isspace())
+        title = "".join(x for x in title if x.isalnum())
+        title = time_added + "-" + title
+
+        list_of_markdown.append((title, markdown))
+
+    return list_of_markdown
