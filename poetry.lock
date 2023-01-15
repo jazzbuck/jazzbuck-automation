@@ -538,7 +538,7 @@ toml = "*"
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -688,4 +688,4 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1212b40da1f3e2f3554f8fd25fe57d88bca401695d89651acc430a64fb4ea73b"
+content-hash = "691601c6d06cbd9f8bce2b3c6bb28425b5ec030f145eed3c1bc45946ce78a3c6"
