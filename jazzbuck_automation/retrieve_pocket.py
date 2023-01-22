@@ -40,6 +40,8 @@ class PocketSession:
         self.data = r.json()["list"]
         self.since = date
 
+        r.close()
+
     def write_data(
         self,
         filename: str,
@@ -58,13 +60,43 @@ def write_pocket_data_to_markdown(
     Convenience function to write pocket data to markdown for Obsidian.
     """
     list_of_markdown = []
-    for key, item in pocket_dict.items():
-        title = item["resolved_title"]
-        time_added = datetime.datetime.utcfromtimestamp(int(item["time_added"]))
-        time_added = format(time_added, "%Y%m%d%H%M")
-        url = item["resolved_url"]
-        excerpt = item["excerpt"]
-        markdown = f"""---
+
+    if not (pocket_dict):
+        return []
+
+    if pocket_dict:
+
+        for key, item in pocket_dict.items():
+
+            match item:
+                case item if "resolved_title" in item:
+                    title = item["resolved_title"]
+                case item if "given_title" in item:
+                    title = item["given_title"]
+                case _:
+                    title = format(datetime.datetime.now(), "%Y%m%d%H%M")
+
+            match item:
+                case item if "time_added" in item:
+                    time_added = datetime.datetime.utcfromtimestamp(
+                        int(item["time_added"])
+                    )
+                case _:
+                    time_added = datetime.datetime.now()
+            time_added = format(time_added, "%Y%m%d%H%M")
+
+            match item:
+                case item if "resolved_url" in item:
+                    url = item["resolved_url"]
+                case _:
+                    url = ""
+
+            try:
+                excerpt = item["excerpt"]
+            except:
+                excerpt = ""
+
+            markdown = f"""---
 id: {time_added}
 aliases: ["{time_added}","{title}"]
 ---
@@ -76,10 +108,10 @@ aliases: ["{time_added}","{title}"]
 
 {excerpt}"""
 
-        title = "".join(x for x in title.title() if not x.isspace())
-        title = "".join(x for x in title if x.isalnum())
-        title = time_added + "-" + title
+            title = "".join(x for x in title.title() if not x.isspace())
+            title = "".join(x for x in title if x.isalnum())
+            title = time_added + "-" + title
 
-        list_of_markdown.append((title, markdown))
+            list_of_markdown.append((title, markdown))
 
     return list_of_markdown

@@ -24,7 +24,7 @@ class ObsidianWebhookConnection:
         r = re.post(
             self.url,
             params=params,
-            data=markdown,
+            data=markdown.encode("utf-8"),
             headers=headers,
         )
 
