@@ -1,3 +1,4 @@
 secrets.yml
 output/*
 jazzbuck_automation/__pycache__/
+jazzbuck_automation/tests/__pycache__/*
