@@ -1,6 +1,7 @@
 import imaplib
 import email
 import email.utils
+import datetime
 
 
 def connect_to_imap_server(
@@ -58,9 +59,10 @@ def write_todo_email_to_markdown(
 ) -> list[tuple[str, str]]:
     list_of_markdown = []
 
-    for message in list_of_messages:
-        dt = format(message[0], "%Y%m%d%H%M")
-        markdown = f"""---
+    if list_of_messages:
+        for message in list_of_messages:
+            dt = format(message[0], "%Y%m%d%H%M")
+            markdown = f"""---
 id: {dt}
 aliases: ["{dt},"{dt}: {message[1]}]
 ---
@@ -69,11 +71,11 @@ aliases: ["{dt},"{dt}: {message[1]}]
 # {message[1]}
 
 {message[2]}"""
-        title = message[1]
-        title = "".join(x for x in title.title() if not x.isspace())
-        title = "".join(x for x in title if x.isalnum())
-        title = dt + "-" + title
+            title = message[1]
+            title = "".join(x for x in title.title() if not x.isspace())
+            title = "".join(x for x in title if x.isalnum())
+            title = dt + "-" + title
 
-        list_of_markdown.append((title, markdown))
+            list_of_markdown.append((title, markdown))
 
     return list_of_markdown
