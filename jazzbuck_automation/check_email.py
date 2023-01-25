@@ -16,17 +16,17 @@ def connect_to_imap_server(
 
 
 def retrieve_latest_emails(
-    n_latest: int,
     connection: imaplib.IMAP4_SSL,
+    n_latest: int,
     expected_sender: str,
     keyword: str = "todo",
 ) -> list:
-    imap = connection
 
+    imap = connection
     _, messages = imap.select("INBOX")
     mailbox_messages = int(messages[0])
     list_of_messages = []
-    for i in range(mailbox_messages - n_latest + 1, mailbox_messages + 1):
+    for i in range(max(mailbox_messages - n_latest + 1, 1), mailbox_messages + 1):
         _, msg_data = imap.fetch(str(i), "(RFC822)")
         for response_part in msg_data:
             if isinstance(response_part, tuple):
@@ -43,13 +43,17 @@ def retrieve_latest_emails(
 
                                 # skip any text/plain (txt) attachments
                                 if ctype == "text/plain" and "attachment" not in cdispo:
-                                    body = part.get_payload(decode=True)  # decode
+                                    body = part.get_payload(decode=True).decode(
+                                        "utf-8"
+                                    )  # decode
                                     break
                         # not multipart - i.e. plain text, no attachments, keeping fingers crossed
                         else:
-                            body = msg.get_payload(decode=True)
+                            body = msg.get_payload(decode=True).decode("utf-8")
 
                         list_of_messages.append((date, subject, body))
+
+    imap.logout()
 
     return list_of_messages
 
@@ -64,7 +68,7 @@ def write_todo_email_to_markdown(
             dt = format(message[0], "%Y%m%d%H%M")
             markdown = f"""---
 id: {dt}
-aliases: ["{dt},"{dt}: {message[1]}]
+aliases: ["{dt},"{dt}: {message[1]}"]
 ---
 #todo
 
@@ -79,3 +83,29 @@ aliases: ["{dt},"{dt}: {message[1]}]
             list_of_markdown.append((title, markdown))
 
     return list_of_markdown
+
+
+def archive_emails_from_inbox(
+    connection: imaplib.IMAP4_SSL,
+    expected_sender: str,
+    keyword: str = "todo",
+) -> None:
+    imap = connection
+    imap.select("INBOX", readonly=False)
+
+    target_inbox = "".join(x for x in keyword if x.isalnum()) + "-archive"
+
+    _, msgs = imap.search(None, f'(SUBJECT "{keyword}")')
+    msg_ids = msgs[0].decode().split()
+
+    for msg_id in msg_ids:
+        resp_code, response = imap.copy(msg_id, f"{target_inbox}")
+        if resp_code == "OK":
+            imap.store(msg_id, "+FLAGS", "\\Seen")
+            imap.store(msg_id, "+FLAGS", "\\Deleted")
+
+    resp_code, response = imap.expunge()
+
+    imap.logout()
+
+    return None

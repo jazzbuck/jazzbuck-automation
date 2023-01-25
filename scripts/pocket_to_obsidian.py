@@ -42,7 +42,7 @@ if __name__ == "__main__":
         then = now - datetime.timedelta(days=1)
 
     pocket.get_since(then)
-    pocket.write_data("latest_pocket_data.txt")
+    pocket.write_data("latest_pocket_data.json")
 
     list_of_markdown = write_pocket_data_to_markdown(pocket.data)
 
