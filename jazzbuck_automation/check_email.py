@@ -69,7 +69,7 @@ def write_todo_email_to_markdown(
             date = format(message[0], "%Y-%m-%d")
             markdown = f"""---
 id: {dt}
-aliases: ["{dt},"{dt}: {message[1]}"]
+aliases: ["{dt}","{dt}: {message[1]}"]
 sr-due: {date}
 sr-interval: 3
 sr-ease: 250
