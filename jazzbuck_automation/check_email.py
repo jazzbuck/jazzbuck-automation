@@ -80,6 +80,7 @@ name Mark complete
 type line(8) template
 action done
 replace [8,8]
+remove true
 ```
 
 # {message[1]}

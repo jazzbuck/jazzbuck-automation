@@ -111,6 +111,7 @@ name Mark read
 type line(8) template
 action read
 replace [8,8]
+remove true
 ```
 
 # {title}
