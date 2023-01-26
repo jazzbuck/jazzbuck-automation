@@ -66,11 +66,21 @@ def write_todo_email_to_markdown(
     if list_of_messages:
         for message in list_of_messages:
             dt = format(message[0], "%Y%m%d%H%M")
+            date = format(message[0], "%Y-%m-%d")
             markdown = f"""---
 id: {dt}
 aliases: ["{dt},"{dt}: {message[1]}"]
+sr-due: {date}
+sr-interval: 3
+sr-ease: 250
 ---
 #todo
+```button
+name Mark complete
+type line(8) template
+action done
+replace [8,8]
+```
 
 # {message[1]}
 
