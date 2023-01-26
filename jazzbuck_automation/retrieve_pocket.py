@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import datetime
 import time
 import yaml
+from copy import deepcopy
 
 
 @dataclass
@@ -83,6 +84,7 @@ def write_pocket_data_to_markdown(
                     )
                 case _:
                     time_added = datetime.datetime.now()
+            dt_added = deepcopy(time_added)
             time_added = format(time_added, "%Y%m%d%H%M")
 
             match item:
@@ -99,8 +101,17 @@ def write_pocket_data_to_markdown(
             markdown = f"""---
 id: {time_added}
 aliases: ["{time_added}","{title}"]
+sr-due: {format(dt_added,'%Y-%m-%d')}
+sr-interval: 3
+sr-ease: 250
 ---
 #reading-inbox
+```button
+name Mark read
+type line(8) template
+action read
+replace [8,8]
+```
 
 # {title}
 
