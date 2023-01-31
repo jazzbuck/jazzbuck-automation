@@ -74,7 +74,7 @@ def write_todo_email_to_markdown(
                 after = after.split()
                 if after[0].lower() == "today":
                     date = format(datetime.datetime.now(), "%Y-%m-%d")
-                if after[0].lower() == "tomorrow":
+                elif after[0].lower() == "tomorrow":
                     date = format(datetime.datetime.now() + datetime.timedelta(days=1))
                 else:
                     date = after[0]
