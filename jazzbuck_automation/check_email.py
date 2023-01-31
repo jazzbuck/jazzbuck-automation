@@ -81,12 +81,25 @@ def write_todo_email_to_markdown(
                 else:
                     date = after[0]
 
+            dl = ""
+            if "dl:" in subject:
+                _, _, after = subject.partition("dl:")
+                if after[0].lower() == "today":
+                    dl = format(datetime.datetime.now(), "%Y-%m-%d")
+                elif after[0].lower() == "tomorrow":
+                    dl = format(
+                        datetime.datetime.now() + datetime.timedelta(days=1), "%Y-%m-%d"
+                    )
+                else:
+                    dl = after[0]
+
             markdown = f"""---
 id: {dt}
 aliases: ["{dt}","{dt}: {message[1]}"]
 sr-due: {date}
 sr-interval: 3
 sr-ease: 250
+dl: {dl}
 ---
 #todo
 ```button
