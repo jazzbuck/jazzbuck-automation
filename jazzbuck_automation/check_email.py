@@ -67,6 +67,18 @@ def write_todo_email_to_markdown(
         for message in list_of_messages:
             dt = format(message[0], "%Y%m%d%H%M")
             date = format(message[0], "%Y-%m-%d")
+            subject = message[1]
+            if "due:" in subject:
+                _, _, after = subject.partition("due:")
+                after = after.strip()
+                after = after.split()
+                if after[0].lower() == "today":
+                    date = format(datetime.datetime.now(), "%Y-%m-%d")
+                if after[0].lower() == "tomorrow":
+                    date = format(datetime.datetime.now() + datetime.timedelta(days=1))
+                else:
+                    date = after[0]
+
             markdown = f"""---
 id: {dt}
 aliases: ["{dt}","{dt}: {message[1]}"]
