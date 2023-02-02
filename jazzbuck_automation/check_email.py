@@ -84,6 +84,8 @@ def write_todo_email_to_markdown(
             dl = ""
             if "dl:" in subject:
                 _, _, after = subject.partition("dl:")
+                after = after.strip()
+                after = after.split()
                 if after[0].lower() == "today":
                     dl = format(datetime.datetime.now(), "%Y-%m-%d")
                 elif after[0].lower() == "tomorrow":

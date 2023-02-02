@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jazzbuck-automation"
-version = "0.3.4"
+version = "0.3.5"
 description = "Scripts to run on a web server to help me in my life."
 authors = ["jazzbuck"]
 license = "MIT"
