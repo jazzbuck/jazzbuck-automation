@@ -56,7 +56,7 @@ if __name__ == "__main__":
             )
             obsidian.send_markdown_to_obsidian(
                 target_path=f"reading-inbox.todotxt",
-                markdown=f"\n(A) [[reading-inbox/{doc[0]}.md|{doc[0]}]]",
+                markdown=f"\n(A) [[reading-inbox/{doc[0]}]]",
             )
 
     with open("latest_pocket_read.txt", "w") as w:

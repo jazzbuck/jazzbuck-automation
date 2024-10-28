@@ -4,3 +4,4 @@ jazzbuck_automation/__pycache__/
 jazzbuck_automation/tests/__pycache__/*
 latest_pocket_data.txt
 latest_pocket_read.txt
+latest_pocket_data.json
