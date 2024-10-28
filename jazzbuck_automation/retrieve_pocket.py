@@ -106,13 +106,6 @@ sr-interval: 3
 sr-ease: 250
 ---
 #reading-inbox
-```button
-name Mark read
-type line(8) template
-action read
-replace [8,8]
-remove true
-```
 
 # {title}
 
